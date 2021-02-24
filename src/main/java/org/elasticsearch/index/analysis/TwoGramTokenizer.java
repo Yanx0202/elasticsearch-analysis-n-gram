@@ -17,6 +17,8 @@ public class TwoGramTokenizer extends Tokenizer{
     /**
      * 词元文本属性
      * 分词后返回的结果就是一系列 token 的属性
+     * 核心的就是这4个 token start_offset end_offset type
+     * 分别由特定的Attribute来设置
      * {
      *   "tokens" : [
      *     {
@@ -47,9 +49,9 @@ public class TwoGramTokenizer extends Tokenizer{
     /**
      * 4kb 数据页大小，提升内存利用率，Linux内存数据页默认为4kb
      */
-    private static final int BUFFER_SIZE = 3;
+    private static final int BUFFER_SIZE = 4096;
 
-    private static final int MAX_GRAM = 3;
+    private static final int MAX_GRAM = 2;
 
     private int readCount;
 
@@ -70,11 +72,7 @@ public class TwoGramTokenizer extends Tokenizer{
         termAtt = addAttribute(CharTermAttribute.class);
         offsetAttr = addAttribute(OffsetAttribute.class);
         typeAttr = addAttribute(TypeAttribute.class);
-
-        if(BUFFER_SIZE < MAX_GRAM){
-            throw new IllegalArgumentException("max_gram 不能超过 缓存区的大小，否则会导致末尾的字符读取不到. " +
-                            "当前 buffer_size : [" + BUFFER_SIZE + "] max_gram : [" + MAX_GRAM + "]");
-        }
+        
         strBuffer = new char[BUFFER_SIZE];
         count = 0;
         beginOffset = 0;
