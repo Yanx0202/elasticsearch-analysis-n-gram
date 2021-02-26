@@ -10,18 +10,18 @@ import org.elasticsearch.index.IndexSettings;
  * @date 2021/2/20
  */
 
-public class TwoGramTokenizerFactory extends AbstractTokenizerFactory{
-    public TwoGramTokenizerFactory(IndexSettings indexSettings, Settings settings, String name) {
+public class NGramTokenizerFactory extends AbstractTokenizerFactory{
+    public NGramTokenizerFactory(IndexSettings indexSettings, Settings settings, String name) {
         super(indexSettings, settings, name);
     }
 
 
     public static TokenizerFactory getTowGramAnalyzerFactory(IndexSettings indexSettings, Environment environment, String s, Settings settings) {
-        return new TwoGramTokenizerFactory(indexSettings, settings, s);
+        return new NGramTokenizerFactory(indexSettings, settings, s);
     }
 
     @Override
     public Tokenizer create() {
-        return new TwoGramTokenizer();
+        return new NGramTokenizer();
     }
 }

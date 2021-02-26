@@ -8,7 +8,7 @@ import org.apache.lucene.analysis.Analyzer;
  * @date 2021/2/20
  */
 
-public class TwoGramAnalyzer extends Analyzer {
+public class NGramAnalyzer extends Analyzer {
     /**
      * 创建 tokenizer 分词器
      * @param fieldName the name of the fields content passed to the
@@ -17,6 +17,6 @@ public class TwoGramAnalyzer extends Analyzer {
      */
     @Override
     protected TokenStreamComponents createComponents(String fieldName) {
-        return new TokenStreamComponents(new TwoGramTokenizer());
+        return new TokenStreamComponents(new NGramTokenizer());
     }
 }

@@ -12,7 +12,7 @@ import java.io.IOException;
  * @date 2021/2/20
  */
 
-public class TwoGramTokenizer extends Tokenizer{
+public class NGramTokenizer extends Tokenizer{
 
     /**
      * 词元文本属性
@@ -44,6 +44,10 @@ public class TwoGramTokenizer extends Tokenizer{
 
     private final TypeAttribute typeAttr;
 
+    /**
+     * 待分词的文本缓存
+     * 用于后续分词处理的缓冲区
+     */
     private char[] strBuffer;
 
     /**
@@ -51,11 +55,14 @@ public class TwoGramTokenizer extends Tokenizer{
      */
     private static final int BUFFER_SIZE = 4096;
 
-    private static final int MAX_GRAM = 2;
+    private static final int MAX_GRAM = 4;
 
-    private int readCount;
+    private static final int MIN_GRAM = 2;
 
-    private int count;
+    /**
+     * 已经阅读的字符数
+     */
+    private int availableCount;
 
     /**
      * 当前缓存读取指针
@@ -63,20 +70,23 @@ public class TwoGramTokenizer extends Tokenizer{
       */
     private int currBufferIndex;
 
+    /**
+     * token 的起始位置
+     */
     private int beginOffset;
 
+    /**
+     * token 的结束位置
+     */
     private int endOffset;
 
-    public TwoGramTokenizer(){
+    public NGramTokenizer(){
         // 属性初始化
-        termAtt = addAttribute(CharTermAttribute.class);
-        offsetAttr = addAttribute(OffsetAttribute.class);
-        typeAttr = addAttribute(TypeAttribute.class);
-        
-        strBuffer = new char[BUFFER_SIZE];
-        count = 0;
-        beginOffset = 0;
-        endOffset = 0;
+        this.termAtt = addAttribute(CharTermAttribute.class);
+        this.offsetAttr = addAttribute(OffsetAttribute.class);
+        this.typeAttr = addAttribute(TypeAttribute.class);
+        // buffer操作相关参数初始化
+        resetParam();
     }
 
 
@@ -92,48 +102,58 @@ public class TwoGramTokenizer extends Tokenizer{
         clearAttributes();
 
         // 读取文本到缓存中
-        if(this.beginOffset == 0 && this.endOffset == 0){
+        if(this.beginOffset == 0 && this.endOffset == MIN_GRAM - 1){
             // 第一次读取
-            // 当起始位置达到 文本末尾长度时，重新读取
-            readCount = input.read(this.strBuffer);
-        } else if(currBufferIndex + endOffset - beginOffset >= BUFFER_SIZE){
-            // 需要把末尾未处理完的字符填充到新的缓存头部
+            availableCount = input.read(this.strBuffer);
+        } else if(getCurrBufferEndIndex() >= BUFFER_SIZE){
+            // 需要把上一次缓存末尾未处理完的字符填充到新的缓存头部
             int retainLength = endOffset - beginOffset;
             System.arraycopy(this.strBuffer, currBufferIndex, this.strBuffer, 0, retainLength);
             // 再填充后 继续读取新的文本
-            readCount = input.read(this.strBuffer, retainLength, BUFFER_SIZE - retainLength);
-            readCount += retainLength;
+            availableCount = input.read(this.strBuffer, retainLength, BUFFER_SIZE - retainLength);
+            if(availableCount < 0){
+                // 读不到后续的buffer数据，认为后续没有待提取的token
+                return false;
+            }
+            availableCount += retainLength;
             // 当前指针指向缓存起始位置
             currBufferIndex = 0;
         }
 
 
-        // 考虑要回溯的话，不能以读取到末尾作为结束条件
-        if(readCount == -1 || currBufferIndex + endOffset - beginOffset > readCount){
+
+        // 将要截取的位置超出 当前可读buffer大小
+        if(getCurrBufferEndIndex() > availableCount){
             // 达到末尾
             return false;
         }
 
         // 向后偏移1位，提取下一个token
         endOffset++;
-        // token计数 + 1
-        count++;
-        StringBuilder tokenStr = new StringBuilder();
-        // 从buffer中获取token
-        for (int i = currBufferIndex; i < currBufferIndex + endOffset - beginOffset && i < readCount; i++) {
-            tokenStr.append(strBuffer[i]);
-        }
-        termAtt.append(tokenStr);
-        offsetAttr.setOffset(beginOffset, endOffset);
-        typeAttr.setType("two-gram");
 
-        // 大于2 是因为是 two gram 2个滑动窗口
-        if(count >= MAX_GRAM){
+        // 即将滑动的窗口超出 当前可读buffer大小
+        if(getCurrBufferEndIndex() > availableCount){
             // 进入下一个字符开头的窗口
-            count = 0;
-            currBufferIndex++;
-            beginOffset++;
-            endOffset = beginOffset;
+            initNextGram();
+            // 向后偏移1位，提取下一个token
+            endOffset++;
+
+            // 此时有可能超出 当前可读buffer大小
+            if(getCurrBufferEndIndex() > availableCount){
+                // 后续的滑动窗口
+                return false;
+            }
+        }
+
+        // 填充文本
+        termAtt.append(new String(strBuffer, currBufferIndex, endOffset - beginOffset));
+        offsetAttr.setOffset(beginOffset, endOffset);
+        typeAttr.setType("n-gram");
+
+        // 判断是否达到下一个字符
+        if(endOffset - beginOffset >= MAX_GRAM){
+            // 进入下一个字符开头的窗口
+            initNextGram();
         }
         return true;
     }
@@ -148,14 +168,37 @@ public class TwoGramTokenizer extends Tokenizer{
     public void reset() throws IOException {
         super.reset();
         // 需要清空之前保存的所有数据
-        strBuffer = new char[BUFFER_SIZE];
-        count = 0;
-        beginOffset = 0;
-        endOffset = 0;
+        resetParam();
     }
 
     @Override
     public void close() throws IOException {
         super.close();
+    }
+
+    /**
+     * 获取当前buffer 末尾index
+     * @return
+     */
+    public int getCurrBufferEndIndex(){
+        return endOffset - beginOffset + currBufferIndex;
+    }
+
+    /**
+     * 为滑动到下一个窗口执行初始化操作
+     * @return
+     */
+    public void initNextGram(){
+        currBufferIndex++;
+        beginOffset++;
+        endOffset = beginOffset + MIN_GRAM - 1;
+    }
+
+    private void resetParam(){
+        this.strBuffer = new char[BUFFER_SIZE];
+        this.currBufferIndex = 0;
+        this.availableCount = 0;
+        this.beginOffset = 0;
+        this.endOffset = MIN_GRAM - 1;
     }
 }

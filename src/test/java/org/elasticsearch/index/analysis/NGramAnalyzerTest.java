@@ -13,10 +13,10 @@ import java.io.IOException;
  * @author yanxin
  * @date 2021/2/23
  */
-public class TwoGramAnalyzerTest {
+public class NGramAnalyzerTest {
     @Test
     public void testAnalyzer() throws IOException {
-        TwoGramAnalyzer analyzer = new TwoGramAnalyzer();
+        NGramAnalyzer analyzer = new NGramAnalyzer();
         TokenStream tokenStream = analyzer.tokenStream("test", "12345");
         CharTermAttribute termAtt = tokenStream.addAttribute(CharTermAttribute.class);
         OffsetAttribute offsetAttribute = tokenStream.addAttribute(OffsetAttribute.class);

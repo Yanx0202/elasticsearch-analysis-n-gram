@@ -1,10 +1,10 @@
-package org.elasticsearch.plugin.analysis.twogram;
+package org.elasticsearch.plugin.analysis.ngram;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.index.analysis.AnalyzerProvider;
 import org.elasticsearch.index.analysis.TokenizerFactory;
-import org.elasticsearch.index.analysis.TwoGramAnalyzerProvider;
-import org.elasticsearch.index.analysis.TwoGramTokenizerFactory;
+import org.elasticsearch.index.analysis.NGramAnalyzerProvider;
+import org.elasticsearch.index.analysis.NGramTokenizerFactory;
 import org.elasticsearch.indices.analysis.AnalysisModule;
 import org.elasticsearch.plugins.AnalysisPlugin;
 import org.elasticsearch.plugins.Plugin;
@@ -17,13 +17,13 @@ import java.util.Map;
  * @date 2021/2/20
  */
 
-public class AnalysisTowGramPlugin extends Plugin implements AnalysisPlugin {
+public class AnalysisNGramPlugin extends Plugin implements AnalysisPlugin {
 
     @Override
     public Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> getTokenizers() {
         Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> extra = new HashMap<>(2);
 
-        extra.put("two_gram", TwoGramTokenizerFactory::getTowGramAnalyzerFactory);
+        extra.put("n_gram", NGramTokenizerFactory::getTowGramAnalyzerFactory);
 
         return extra;
     }
@@ -32,7 +32,7 @@ public class AnalysisTowGramPlugin extends Plugin implements AnalysisPlugin {
     public Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> getAnalyzers() {
         Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> extra = new HashMap<>(2);
 
-        extra.put("two_gram", TwoGramAnalyzerProvider::getTowGramAnalyzerProvider);
+        extra.put("n_gram", NGramAnalyzerProvider::getTowGramAnalyzerProvider);
 
         return extra;
     }
