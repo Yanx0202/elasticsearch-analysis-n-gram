@@ -9,6 +9,21 @@ import org.apache.lucene.analysis.Analyzer;
  */
 
 public class NGramAnalyzer extends Analyzer {
+
+    private int minGram;
+
+    private int maxGram;
+
+
+    public NGramAnalyzer(){
+        this(1, 2);
+    }
+
+    public NGramAnalyzer(int minGram, int maxGram){
+        this.minGram = minGram;
+        this.maxGram = maxGram;
+    }
+
     /**
      * 创建 tokenizer 分词器
      * @param fieldName the name of the fields content passed to the
@@ -17,6 +32,6 @@ public class NGramAnalyzer extends Analyzer {
      */
     @Override
     protected TokenStreamComponents createComponents(String fieldName) {
-        return new TokenStreamComponents(new NGramTokenizer());
+        return new TokenStreamComponents(new NGramTokenizer(minGram , maxGram));
     }
 }

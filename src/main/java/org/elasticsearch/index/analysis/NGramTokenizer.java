@@ -55,9 +55,9 @@ public class NGramTokenizer extends Tokenizer{
      */
     private static final int BUFFER_SIZE = 4096;
 
-    private static final int MAX_GRAM = 4;
+    private int minGram;
 
-    private static final int MIN_GRAM = 2;
+    private int maxGram;
 
     /**
      * 已经阅读的字符数
@@ -81,6 +81,17 @@ public class NGramTokenizer extends Tokenizer{
     private int endOffset;
 
     public NGramTokenizer(){
+        this(1, 2);
+    }
+
+    public NGramTokenizer(int minGram, int maxGram){
+        if(minGram >= maxGram){
+            throw new IllegalArgumentException("minGram should less than maxGram. minGram: " + minGram + " maxGram: " + maxGram);
+        }
+
+        this.minGram = minGram;
+        this.maxGram = maxGram;
+
         // 属性初始化
         this.termAtt = addAttribute(CharTermAttribute.class);
         this.offsetAttr = addAttribute(OffsetAttribute.class);
@@ -102,7 +113,7 @@ public class NGramTokenizer extends Tokenizer{
         clearAttributes();
 
         // 读取文本到缓存中
-        if(this.beginOffset == 0 && this.endOffset == MIN_GRAM - 1){
+        if(this.beginOffset == 0 && this.endOffset == minGram - 1){
             // 第一次读取
             availableCount = input.read(this.strBuffer);
         } else if(getCurrBufferEndIndex() >= BUFFER_SIZE){
@@ -151,7 +162,7 @@ public class NGramTokenizer extends Tokenizer{
         typeAttr.setType("n-gram");
 
         // 判断是否达到下一个字符
-        if(endOffset - beginOffset >= MAX_GRAM){
+        if(endOffset - beginOffset >= maxGram){
             // 进入下一个字符开头的窗口
             initNextGram();
         }
@@ -191,7 +202,7 @@ public class NGramTokenizer extends Tokenizer{
     public void initNextGram(){
         currBufferIndex++;
         beginOffset++;
-        endOffset = beginOffset + MIN_GRAM - 1;
+        endOffset = beginOffset + minGram - 1;
     }
 
     private void resetParam(){
@@ -199,6 +210,6 @@ public class NGramTokenizer extends Tokenizer{
         this.currBufferIndex = 0;
         this.availableCount = 0;
         this.beginOffset = 0;
-        this.endOffset = MIN_GRAM - 1;
+        this.endOffset = minGram - 1;
     }
 }

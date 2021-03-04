@@ -23,7 +23,7 @@ public class AnalysisNGramPlugin extends Plugin implements AnalysisPlugin {
     public Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> getTokenizers() {
         Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> extra = new HashMap<>(2);
 
-        extra.put("n_gram", NGramTokenizerFactory::getTowGramAnalyzerFactory);
+        extra.put("n_gram", NGramTokenizerFactory::getNGramAnalyzerFactory);
 
         return extra;
     }
@@ -32,7 +32,7 @@ public class AnalysisNGramPlugin extends Plugin implements AnalysisPlugin {
     public Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> getAnalyzers() {
         Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> extra = new HashMap<>(2);
 
-        extra.put("n_gram", NGramAnalyzerProvider::getTowGramAnalyzerProvider);
+        extra.put("n_gram", NGramAnalyzerProvider::getNGramAnalyzerProvider);
 
         return extra;
     }
