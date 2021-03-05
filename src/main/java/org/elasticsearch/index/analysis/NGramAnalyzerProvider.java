@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 import org.elasticsearch.index.IndexSettings;
+import org.ngram.config.Configuration;
 
 /**
  * @author yanxin
@@ -24,7 +25,7 @@ public class NGramAnalyzerProvider extends AbstractIndexAnalyzerProvider<NGramAn
         int minGram = settings.getAsInt("max_gram", 9);
         int maxGram = settings.getAsInt("min_gram", 10);
         logger.info("min_gram : " + minGram + " max_gram:" + maxGram);
-        analyzer = new NGramAnalyzer(minGram, maxGram);
+        analyzer = new NGramAnalyzer(new Configuration(minGram, maxGram));
     }
 
     public static NGramAnalyzerProvider getNGramAnalyzerProvider(IndexSettings indexSettings, Environment environment, String s, Settings settings){

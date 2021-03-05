@@ -2,6 +2,7 @@ package org.elasticsearch.index.analysis;
 
 
 import org.apache.lucene.analysis.Analyzer;
+import org.ngram.config.Configuration;
 
 /**
  * @author yanxin
@@ -10,18 +11,14 @@ import org.apache.lucene.analysis.Analyzer;
 
 public class NGramAnalyzer extends Analyzer {
 
-    private int minGram;
-
-    private int maxGram;
-
+    private Configuration configuration;
 
     public NGramAnalyzer(){
-        this(1, 2);
+        this(new Configuration(1, 2));
     }
 
-    public NGramAnalyzer(int minGram, int maxGram){
-        this.minGram = minGram;
-        this.maxGram = maxGram;
+    public NGramAnalyzer(Configuration configuration){
+       this.configuration = configuration;
     }
 
     /**
@@ -32,6 +29,6 @@ public class NGramAnalyzer extends Analyzer {
      */
     @Override
     protected TokenStreamComponents createComponents(String fieldName) {
-        return new TokenStreamComponents(new NGramTokenizer(minGram , maxGram));
+        return new TokenStreamComponents(new NGramTokenizer(configuration));
     }
 }
