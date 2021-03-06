@@ -12,7 +12,7 @@ import org.ngram.config.Configuration;
  * @date 2021/2/20
  */
 
-public class NGramAnalyzerProvider extends AbstractIndexAnalyzerProvider<NGramAnalyzer>{
+public class NGramAnalyzerProvider extends AbstractIndexAnalyzerProvider<NGramAnalyzer> {
     private final NGramAnalyzer analyzer;
     private static final Logger logger = LogManager.getLogger(NGramAnalyzerProvider.class);
 
@@ -28,7 +28,7 @@ public class NGramAnalyzerProvider extends AbstractIndexAnalyzerProvider<NGramAn
         analyzer = new NGramAnalyzer(new Configuration(minGram, maxGram));
     }
 
-    public static NGramAnalyzerProvider getNGramAnalyzerProvider(IndexSettings indexSettings, Environment environment, String s, Settings settings){
+    public static NGramAnalyzerProvider getNGramAnalyzerProvider(IndexSettings indexSettings, Environment environment, String s, Settings settings) {
         return new NGramAnalyzerProvider(indexSettings, s, settings);
     }
 

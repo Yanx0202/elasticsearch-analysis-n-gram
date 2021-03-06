@@ -15,7 +15,7 @@ import java.io.IOException;
  * @date 2021/2/20
  */
 
-public class NGramTokenizer extends Tokenizer{
+public class NGramTokenizer extends Tokenizer {
 
     /**
      * 词元文本属性
@@ -52,11 +52,11 @@ public class NGramTokenizer extends Tokenizer{
      */
     private NGramSegmenter nGramSegmenter;
 
-    public NGramTokenizer(){
+    public NGramTokenizer() {
         this(new Configuration(1, 2));
     }
 
-    public NGramTokenizer(Configuration configuration){
+    public NGramTokenizer(Configuration configuration) {
         this.nGramSegmenter = new NGramSegmenter(input, configuration);
 
         // 属性初始化
@@ -71,6 +71,7 @@ public class NGramTokenizer extends Tokenizer{
     /**
      * 执行分词，并且设置token的相关属性
      * 一轮只会获取1个词，所以对于有 相同开头字符的要注意遍历
+     *
      * @return 后续是否还有分词
      * @throws IOException
      */
@@ -82,7 +83,7 @@ public class NGramTokenizer extends Tokenizer{
         // 获取下一个词元
         Term term = nGramSegmenter.next();
 
-        if(term == null){
+        if (term == null) {
             // 结束分词
             return false;
         }
@@ -98,6 +99,7 @@ public class NGramTokenizer extends Tokenizer{
      * reset 其实就是表明了，其实每次分词用的 Tokenizer 类都是同一个，而不是调用 new Tokenizer() 重新实例化一个
      * TokenizerFactory 的 create 方法也可以理解到这个点
      * 所以执行下一次分词操作的时候，都需要先reset，把之前保存的数据清空
+     *
      * @throws IOException
      */
     @Override

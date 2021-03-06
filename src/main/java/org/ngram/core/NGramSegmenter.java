@@ -14,7 +14,7 @@ import java.util.LinkedList;
  * @author yanxin
  * @date 2021/3/5
  */
-public class NGramSegmenter implements ISegmenter{
+public class NGramSegmenter implements ISegmenter {
 
     /**
      * 待分词文本内容
@@ -36,9 +36,6 @@ public class NGramSegmenter implements ISegmenter{
         this.input = input;
         this.configuration = configuration;
         this.terms = new LinkedList<>();
-//        readContent(input);
-//
-//        analyze();
     }
 
     /**
@@ -50,7 +47,7 @@ public class NGramSegmenter implements ISegmenter{
         int maxGram = configuration.getMaxGram();
 
         // n-Gram 分词逻辑非常简单，就是一个滑动窗口执行即可
-        for(int i = 0;i < content.length() + minGram; i++){
+        for (int i = 0; i < content.length() + minGram; i++) {
             for (int j = i + minGram; j < i + maxGram + 1 && j < content.length(); j++) {
                 // 添加词
                 terms.add(new Term(content.substring(i, j), i, j, TermTypeEnum.N_GRAM));
@@ -89,7 +86,7 @@ public class NGramSegmenter implements ISegmenter{
         this.input = input;
 
         // 执行分词初始化，一旦初始化就读取文本执行分词算法
-        // 这块如果不这样的话，在elasticsearch 分词插件调用函数顺序上会有其他负责度需要去考虑
+        // 这块如果不这样的话，在elasticsearch 分词插件调用函数顺序上会有其他复杂度需要去考虑
         // 总而言之，这样是在代码结构上最简便的
         readContent();
         analyze();

@@ -16,6 +16,7 @@ public interface ISegmenter {
 
     /**
      * 重置分词器状态
+     *
      * @param reader 文本输入流
      */
     void reset(Reader reader);

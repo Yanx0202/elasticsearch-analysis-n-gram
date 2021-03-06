@@ -1,13 +1,12 @@
 package org.ngram.core;
 
 /**
+ * 最小词元
+ *
  * @author yanxin
  * @date 2021/3/5
  */
 
-/**
- * 最小词元
- */
 public class Term {
 
     /**

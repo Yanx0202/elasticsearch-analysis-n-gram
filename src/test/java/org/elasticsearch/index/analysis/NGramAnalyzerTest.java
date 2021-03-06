@@ -30,6 +30,8 @@ public class NGramAnalyzerTest {
         tokenStream.end();
         tokenStream.close();
 
+        System.out.println("==================第二次分词==================");
+
         tokenStream = analyzer.tokenStream("test", "67890");
         termAtt = tokenStream.addAttribute(CharTermAttribute.class);
         offsetAttribute = tokenStream.addAttribute(OffsetAttribute.class);

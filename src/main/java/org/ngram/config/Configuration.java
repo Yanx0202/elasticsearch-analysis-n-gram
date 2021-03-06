@@ -3,6 +3,7 @@ package org.ngram.config;
 /**
  * 分词器配置类
  * 用于传递配置
+ *
  * @author yanxin
  * @date 2021/3/5
  */

@@ -13,11 +13,11 @@ public enum TermTypeEnum {
 
     private String name;
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
-    TermTypeEnum(String name){
+    TermTypeEnum(String name) {
         this.name = name;
     }
 }

@@ -13,7 +13,7 @@ import org.ngram.config.Configuration;
  * @date 2021/2/20
  */
 
-public class NGramTokenizerFactory extends AbstractTokenizerFactory{
+public class NGramTokenizerFactory extends AbstractTokenizerFactory {
     private static final Logger logger = LogManager.getLogger(NGramTokenizerFactory.class);
 
     private Configuration configuration;

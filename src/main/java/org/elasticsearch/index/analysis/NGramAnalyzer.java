@@ -13,18 +13,19 @@ public class NGramAnalyzer extends Analyzer {
 
     private Configuration configuration;
 
-    public NGramAnalyzer(){
+    public NGramAnalyzer() {
         this(new Configuration(1, 2));
     }
 
-    public NGramAnalyzer(Configuration configuration){
-       this.configuration = configuration;
+    public NGramAnalyzer(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     /**
      * 创建 tokenizer 分词器
+     *
      * @param fieldName the name of the fields content passed to the
-     *    *          {@link TokenStreamComponents} sink as a reader
+     *                  *          {@link TokenStreamComponents} sink as a reader
      * @return two gram 分词器实例
      */
     @Override
