@@ -1,6 +1,7 @@
 package org.ngram.core;
 
 import org.ngram.config.Configuration;
+import org.ngram.dictionary.Dictionary;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -30,6 +31,11 @@ public class NGramSegmenter implements ISegmenter {
 
     private Reader input;
 
+    /**
+     * 词库文件
+     */
+    private Dictionary dictionary;
+
     private Configuration configuration;
 
     public NGramSegmenter(Reader input, Configuration configuration) {
@@ -55,6 +61,7 @@ public class NGramSegmenter implements ISegmenter {
         }
     }
 
+    @Override
     public Term next() {
         return terms.poll();
     }

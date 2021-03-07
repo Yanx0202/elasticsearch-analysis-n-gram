@@ -53,7 +53,7 @@ public class NGramTokenizer extends Tokenizer {
     private NGramSegmenter nGramSegmenter;
 
     public NGramTokenizer() {
-        this(new Configuration(1, 2));
+        this(new Configuration(null, 1, 2));
     }
 
     public NGramTokenizer(Configuration configuration) {

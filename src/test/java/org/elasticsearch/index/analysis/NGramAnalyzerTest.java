@@ -44,6 +44,13 @@ public class NGramAnalyzerTest {
         }
         tokenStream.end();
         tokenStream.close();
+
+
+        try {
+            Thread.sleep(100000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

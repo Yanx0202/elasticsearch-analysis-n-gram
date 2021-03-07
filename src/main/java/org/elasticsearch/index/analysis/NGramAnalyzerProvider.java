@@ -16,7 +16,7 @@ public class NGramAnalyzerProvider extends AbstractIndexAnalyzerProvider<NGramAn
     private final NGramAnalyzer analyzer;
     private static final Logger logger = LogManager.getLogger(NGramAnalyzerProvider.class);
 
-    public NGramAnalyzerProvider(IndexSettings indexSettings, String name, Settings settings) {
+    public NGramAnalyzerProvider(IndexSettings indexSettings, Environment environment, String name, Settings settings) {
         super(indexSettings, name, settings);
         // 获取配置的时候一定要用有设置 default 默认值的方法
         // 因为在es启动的时候会去构造这个 Analyzer，但是此时是拿不到相关mapping中的配置的 如(max_gram，这个配置是配置在 index 的mapping中)
@@ -25,11 +25,11 @@ public class NGramAnalyzerProvider extends AbstractIndexAnalyzerProvider<NGramAn
         int minGram = settings.getAsInt("max_gram", 9);
         int maxGram = settings.getAsInt("min_gram", 10);
         logger.info("min_gram : " + minGram + " max_gram:" + maxGram);
-        analyzer = new NGramAnalyzer(new Configuration(minGram, maxGram));
+        analyzer = new NGramAnalyzer(new Configuration(environment, minGram, maxGram));
     }
 
     public static NGramAnalyzerProvider getNGramAnalyzerProvider(IndexSettings indexSettings, Environment environment, String s, Settings settings) {
-        return new NGramAnalyzerProvider(indexSettings, s, settings);
+        return new NGramAnalyzerProvider(indexSettings, environment, s, settings);
     }
 
     @Override

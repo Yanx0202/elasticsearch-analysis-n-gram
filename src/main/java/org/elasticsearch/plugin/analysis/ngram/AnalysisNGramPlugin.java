@@ -19,6 +19,8 @@ import java.util.Map;
 
 public class AnalysisNGramPlugin extends Plugin implements AnalysisPlugin {
 
+    public static final String PLUGIN_NAME = "n-gram";
+
     @Override
     public Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> getTokenizers() {
         Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> extra = new HashMap<>(2);

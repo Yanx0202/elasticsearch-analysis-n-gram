@@ -2,6 +2,7 @@ package org.elasticsearch.index.analysis;
 
 
 import org.apache.lucene.analysis.Analyzer;
+import org.elasticsearch.env.Environment;
 import org.ngram.config.Configuration;
 
 /**
@@ -14,7 +15,7 @@ public class NGramAnalyzer extends Analyzer {
     private Configuration configuration;
 
     public NGramAnalyzer() {
-        this(new Configuration(1, 2));
+        this(new Configuration(null,1, 2));
     }
 
     public NGramAnalyzer(Configuration configuration) {

@@ -15,6 +15,13 @@ public interface ISegmenter {
     void analyze();
 
     /**
+     * 获取下一个词元
+     *
+     * @return 词元
+     */
+    Term next();
+
+    /**
      * 重置分词器状态
      *
      * @param reader 文本输入流
