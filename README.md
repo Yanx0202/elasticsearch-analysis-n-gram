@@ -6,6 +6,15 @@
 
 https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-ngram-tokenizer.html
 
+### 支持功能
+（1）读取mapping配置
+
+（2）读取config文件配置
+
+（3）支持添加本地词库
+
+（4）支持添加远程词库
+
 ### 插件开发参考文档
 ik分词器源码
 
