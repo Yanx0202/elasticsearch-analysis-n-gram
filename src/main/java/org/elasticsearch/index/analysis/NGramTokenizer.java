@@ -7,6 +7,7 @@ import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.ngram.config.Configuration;
 import org.ngram.core.NGramSegmenter;
 import org.ngram.core.Term;
+import org.ngram.dictionary.Dictionary;
 
 import java.io.IOException;
 
@@ -64,7 +65,8 @@ public class NGramTokenizer extends Tokenizer {
         this.offsetAttr = addAttribute(OffsetAttribute.class);
         this.typeAttr = addAttribute(TypeAttribute.class);
 
-
+        // 初始化词典配置
+        Dictionary.configuration = configuration;
     }
 
 

@@ -77,7 +77,7 @@ public class DictionaryMonitorThread implements Runnable {
                         || ((response.getLastHeader("ETag") != null) && !response.getLastHeader("ETag").getValue().equalsIgnoreCase(eTags));
                 if (isUpdate) {
                     // 远程词库有更新,需要重新加载词典，并修改last_modified,eTags
-                    Dictionary.reload();
+                    Dictionary.reloadRemoteDictionary();
                     lastModified = response.getLastHeader("Last-Modified") == null ? null : response.getLastHeader("Last-Modified").getValue();
                     eTags = response.getLastHeader("ETag") == null ? null : response.getLastHeader("ETag").getValue();
                 }
@@ -89,7 +89,7 @@ public class DictionaryMonitorThread implements Runnable {
             }
 
         } catch (Exception e) {
-            logger.error("remote_ext_dict {} error!", e, dictionaryAddress);
+            logger.error("remote_ext_dict {} error! {}",  dictionaryAddress ,e);
         }
     }
 }

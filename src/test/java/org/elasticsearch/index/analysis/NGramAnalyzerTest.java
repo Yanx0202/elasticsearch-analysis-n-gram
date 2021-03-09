@@ -5,9 +5,14 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.env.Environment;
 import org.junit.Test;
+import org.ngram.config.Configuration;
 
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.HashMap;
 
 /**
  * @author yanxin
@@ -16,6 +21,7 @@ import java.io.IOException;
 public class NGramAnalyzerTest {
     @Test
     public void testAnalyzer() throws IOException {
+
         NGramAnalyzer analyzer = new NGramAnalyzer();
         TokenStream tokenStream = analyzer.tokenStream("test", "12345");
         CharTermAttribute termAtt = tokenStream.addAttribute(CharTermAttribute.class);
@@ -46,11 +52,11 @@ public class NGramAnalyzerTest {
         tokenStream.close();
 
 
-        try {
-            Thread.sleep(100000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(100000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }
