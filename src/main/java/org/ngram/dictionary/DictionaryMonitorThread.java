@@ -54,6 +54,8 @@ public class DictionaryMonitorThread implements Runnable {
      * 检查远程词典是否有更新
      */
     private void check() {
+        logger.info("remote_ext_dict {} begin check.", dictionaryAddress);
+
         //超时设置
         RequestConfig rc = RequestConfig.custom().setConnectionRequestTimeout(10 * 1000)
                 .setConnectTimeout(10 * 1000).setSocketTimeout(15 * 1000).build();
@@ -75,21 +77,25 @@ public class DictionaryMonitorThread implements Runnable {
             if (response.getStatusLine().getStatusCode() == 200) {
                 boolean isUpdate = ((response.getLastHeader("Last-Modified") != null) && !response.getLastHeader("Last-Modified").getValue().equalsIgnoreCase(lastModified))
                         || ((response.getLastHeader("ETag") != null) && !response.getLastHeader("ETag").getValue().equalsIgnoreCase(eTags));
-                if (isUpdate) {
-                    // 远程词库有更新,需要重新加载词典，并修改last_modified,eTags
-                    Dictionary.reloadRemoteDictionary();
-                    lastModified = response.getLastHeader("Last-Modified") == null ? null : response.getLastHeader("Last-Modified").getValue();
-                    eTags = response.getLastHeader("ETag") == null ? null : response.getLastHeader("ETag").getValue();
+                if (!isUpdate) {
+                    logger.info("remote_ext_dict {} is not update, Last-Modified={} ETag={}", dictionaryAddress, lastModified, eTags);
+                    return;
                 }
+                // 远程词库有更新,需要重新加载词典，并修改last_modified,eTags
+                Dictionary.reloadRemoteDictionary();
+                lastModified = response.getLastHeader("Last-Modified") == null ? null : response.getLastHeader("Last-Modified").getValue();
+                eTags = response.getLastHeader("ETag") == null ? null : response.getLastHeader("ETag").getValue();
+                logger.info("remote_ext_dict {} check is modified {}", dictionaryAddress, response.getStatusLine().getStatusCode());
             } else if (response.getStatusLine().getStatusCode() == 304) {
                 //没有修改，不做操作
                 //noop
+                logger.info("remote_ext_dict {} is not modified {}", dictionaryAddress, response.getStatusLine().getStatusCode());
             } else {
                 logger.info("remote_ext_dict {} return bad code {}", dictionaryAddress, response.getStatusLine().getStatusCode());
             }
 
         } catch (Exception e) {
-            logger.error("remote_ext_dict {} error! {}",  dictionaryAddress ,e);
+            logger.error("remote_ext_dict {} error! {}", dictionaryAddress, e);
         }
     }
 }
